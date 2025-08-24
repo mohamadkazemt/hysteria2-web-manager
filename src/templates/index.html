@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hysteria2 Complete Manager | مدیریت کامل هیستریا</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .main-tab {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .main-tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .main-tab:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .main-tab.active:hover {
+            background: white;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .status-online {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .status-offline {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            color: white;
+        }
+
+        .status-unknown {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .status-item h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .status-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 2px 0;
+        }
+
+        .client-actions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .btn-small {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-small:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .system-info {
+            margin-top: 20px;
+        }
+
+        .system-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .logs-section, .clients-section, .server-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        input, select, button, textarea {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .btn-restart:hover {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-install {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .server-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .server-status-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .server-status-item.online {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .server-status-item.offline {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .server-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .server-info h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .server-info p {
+            margin: 5px 0;
+        }
+
+        .logs-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .logs-container {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .log-entry:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .log-info {
+            color: #74c0fc;
+            border-left-color: #74c0fc;
+        }
+
+        .log-success {
+            color: #51cf66;
+            border-left-color: #51cf66;
+        }
+
+        .log-error {
+            color: #ff6b6b;
+            border-left-color: #ff6b6b;
+        }
+
+        .log-warning {
+            color: #ffd43b;
+            border-left-color: #ffd43b;
+        }
+
+        .log-timestamp {
+            color: #adb5bd;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stats-item {
+            text-align: center;
+        }
+
+        .stats-item .number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stats-item .label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: #28a745;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .error-message, .success-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            direction: rtl;
+        }
+
+        .close {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 3px;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 20px;
+            border-radius: 7px;
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-grid, .server-status {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .logs-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+
+            .main-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-network-wired"></i> Hysteria2 Complete Manager</h1>
+            <p>مدیریت کامل هیستریا - سرور و کلاینت</p>
+        </div>
+
+        <div class="main-tabs">
+            <button class="main-tab active" onclick="showMainTab('monitoring')">
+                <i class="fas fa-chart-line"></i> مانیتور و کلاینت
+            </button>
+            <button class="main-tab" onclick="showMainTab('server')">
+                <i class="fas fa-server"></i> مدیریت سرور
+            </button>
+        </div>
+
+        <!-- Monitoring Section -->
+        <div id="monitoring" class="main-content active">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-desktop"></i>
+                            <h3>وضعیت کلاینت‌ها</h3>
+                        </div>
+                    </div>
+                    <div class="status-grid" id="clientsStatus">
+                        <!-- Client status will be loaded here -->
+                    </div>
+                    <div class="system-info" id="systemInfo">
+                        <!-- System info will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-tools"></i>
+                            <h3>مدیریت سرویس‌ها</h3>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;" id="serviceButtons">
+                        <!-- Service buttons will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Management Section -->
+            <div class="clients-section">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>مدیریت کلاینت‌ها</h3>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('add-client')">
+                        <i class="fas fa-plus"></i> افزودن کلاینت
+                    </button>
+                    <button class="tab" onclick="showTab('manage-clients')">
+                        <i class="fas fa-cogs"></i> مدیریت کلاینت‌ها
+                    </button>
+                </div>
+
+                <!-- Add Client Tab -->
+                <div id="add-client" class="tab-content active">
+                    <form id="addClientForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>IP سرور هیستریا:</label>
+                                <input type="text" id="client_server_ip" placeholder="مثال: 1.2.3.4" required>
+                            </div>
+                            <div class="form-group">
+                                <label>پورت سرور:</label>
+                                <input type="number" id="client_server_port" value="443" min="1" max="65535" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>رمز عبور (اختیاری):</label>
+                                <input type="text" id="client_password" placeholder="خودکار تولید می‌شود">
+                            </div>
+                            <div class="form-group">
+                                <label>پورت SOCKS5 (اختیاری):</label>
+                                <input type="number" id="client_custom_port" placeholder="خودکار انتخاب می‌شود" min="1024" max="65535">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-success">
+                            <i class="fas fa-plus"></i> ایجاد کلاینت
+                        </button>
+                    </form>
+
+                    <div id="addClientMessage"></div>
+                </div>
+
+                <!-- Manage Clients Tab -->
+                <div id="manage-clients" class="tab-content">
+                    <div id="clientsList">
+                        <!-- Clients list will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs Section -->
+            <div class="logs-section">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>لاگ‌های سیستم</h3>
+                    </div>
+                    <div class="live-indicator" id="liveIndicator">
+                        <div class="live-dot"></div>
+                        زنده
+                    </div>
+                </div>
+
+                <div class="logs-controls">
+                    <div class="control-group">
+                        <label>تعداد خطوط:</label>
+                        <select id="logLines">
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label>فیلتر:</label>
+                        <input type="text" id="logFilter" placeholder="جستجو در لاگ‌ها...">
+                    </div>
+
+                    <button onclick="loadLogs()">
+                        <i class="fas fa-sync"></i> بارگیری
+                    </button>
+
+                    <button onclick="clearLogs()">
+                        <i class="fas fa-trash"></i> پاک کردن
+                    </button>
+
+                    <button onclick="toggleAutoRefresh()" id="autoRefreshBtn">
+                        <i class="fas fa-pause"></i> توقف خودکار
+                    </button>
+                </div>
+
+                <div class="stats-bar" id="logStats">
+                    <div class="stats-item">
+                        <div class="number" id="totalLogs">0</div>
+                        <div class="label">کل لاگ‌ها</div>
+                    </div>
+                    <div class="stats-item">
+                        <div class="number" id="filteredLogs">0</div>
+                        <div class="label">نمایش داده شده</div>
+                    </div>
+                    <div class="stats-item">
+                        <div class="number" id="lastUpdate">--:--</div>
+                        <div class="label">آخرین بروزرسانی</div>
+                    </div>
+                </div>
+
+                <div class="logs-container" id="logsContainer">
+                    <div class="log-entry log-info">
+                        <span class="log-timestamp">در حال بارگیری...</span>
+                        لطفا صبر کنید...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Server Management Section -->
+        <div id="server" class="main-content">
+            <div class="server-section">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fas fa-server"></i>
+                        <h3>مدیریت سرور Hysteria2</h3>
+                    </div>
+                </div>
+
+                <div class="server-status" id="serverStatus">
+                    <!-- Server status will be loaded here -->
+                </div>
+
+                <div id="serverInfo" class="server-info" style="display: none;">
+                    <!-- Server information will be displayed here -->
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('server-setup')">
+                        <i class="fas fa-cog"></i> راه‌اندازی سرور
+                    </button>
+                    <button class="tab" onclick="showTab('server-install')">
+                        <i class="fas fa-download"></i> نصب هیستریا
+                    </button>
+                </div>
+
+                <!-- Server Setup Tab -->
+                <div id="server-setup" class="tab-content active">
+                    <form id="serverSetupForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>پورت سرور:</label>
+                                <input type="number" id="server_port" value="443" min="1" max="65535" required>
+                            </div>
+                            <div class="form-group">
+                                <label>رمز عبور (اختیاری):</label>
+                                <input type="text" id="server_password" placeholder="خودکار تولید می‌شود">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>دامنه (اختیاری):</label>
+                            <input type="text" id="server_domain" placeholder="مثال: example.com">
+                        </div>
+
+                        <button type="submit" class="btn-success">
+                            <i class="fas fa-rocket"></i> راه‌اندازی سرور
+                        </button>
+                    </form>
+
+                    <div id="serverSetupMessage"></div>
+                </div>
+
+                <!-- Server Install Tab -->
+                <div id="server-install" class="tab-content">
+                    <div style="text-align: center; padding: 20px;">
+                        <h4>نصب هسته Hysteria2</h4>
+                        <p>اگر هسته Hysteria2 نصب نیست، از این بخش برای نصب استفاده کنید.</p>
+                        <br>
+                        <button onclick="installHysteria()" class="btn-install">
+                            <i class="fas fa-download"></i> نصب Hysteria2
+                        </button>
+                        
+                        <div id="installProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill">در حال نصب...</div>
+                            </div>
+                        </div>
+                        
+                        <div id="installMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Client Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>حذف کلاینت</h3>
+            <p>آیا از حذف این کلاینت اطمینان دارید؟</p>
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn-danger" onclick="confirmDelete()">حذف</button>
+                <button onclick="closeDeleteModal()" style="margin-right: 10px;">انصراف</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefresh = true;
+        let refreshInterval;
+        let eventSource;
+        let clientToDelete = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatus();
+            loadLogs();
+            loadClientsList();
+            loadServerStatus();
+            startAutoRefresh();
+            connectEventSource();
+        });
+
+        // Main tab management
+        function showMainTab(tabName) {
+            // Hide all main content sections
+            document.querySelectorAll('.main-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'server') {
+                loadServerStatus();
+            }
+        }
+
+        // Sub tab management
+        function showTab(tabName) {
+            // Get the parent section to target the correct tabs
+            const parentSection = event.target.closest('.server-section, .clients-section');
+            
+            // Hide all tabs in this section
+            parentSection.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            parentSection.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'manage-clients') {
+                loadClientsList();
+            }
+        }
+
+        // Load server status
+        function loadServerStatus() {
+            fetch('/api/server/status')
+                .then(response => response.json())
+                .then(data => {
+                    displayServerStatus(data);
+                })
+                .catch(error => {
+                    console.error('Error loading server status:', error);
+                });
+        }
+
+        // Display server status
+        function displayServerStatus(data) {
+            const container = document.getElementById('serverStatus');
+            const infoContainer = document.getElementById('serverInfo');
+            
+            container.innerHTML = `
+                <div class="server-status-item ${data.installed ? 'online' : 'offline'}">
+                    <h4>${data.installed ? '✅' : '❌'} هسته</h4>
+                    <p>${data.installed ? 'نصب شده' : 'نصب نشده'}</p>
+                </div>
+                <div class="server-status-item ${data.configured ? 'online' : 'offline'}">
+                    <h4>${data.configured ? '⚙️' : '❌'} کانفیگ</h4>
+                    <p>${data.configured ? 'تنظیم شده' : 'تنظیم نشده'}</p>
+                </div>
+                <div class="server-status-item ${data.running ? 'online' : 'offline'}">
+                    <h4>${data.running ? '🟢' : '🔴'} وضعیت</h4>
+                    <p>${data.running ? 'در حال اجرا' : 'متوقف'}</p>
+                </div>
+            `;
+
+            // Show server info if configured
+            if (data.configured && data.config) {
+                infoContainer.style.display = 'block';
+                infoContainer.innerHTML = `
+                    <h4>اطلاعات سرور:</h4>
+                    <p><strong>IP سرور:</strong> ${data.config.domain || 'نامشخص'}</p>
+                    <p><strong>پورت:</strong> ${data.config.port || 'نامشخص'}</p>
+                    <p><strong>رمز عبور:</strong> ${data.config.password || 'نامشخص'}</p>
+                    <p><strong>فایل کانفیگ:</strong> ${data.config.config_file || 'نامشخص'}</p>
+                `;
+            } else {
+                infoContainer.style.display = 'none';
+            }
+        }
+
+        // Install Hysteria
+        function installHysteria() {
+            const progressDiv = document.getElementById('installProgress');
+            const progressFill = document.getElementById('progressFill');
+            const messageDiv = document.getElementById('installMessage');
+            
+            progressDiv.style.display = 'block';
+            progressFill.style.width = '10%';
+            messageDiv.innerHTML = '';
+
+            fetch('/api/server/install', {
+                method: 'POST'
+            })
+            .then(response => {
+                progressFill.style.width = '50%';
+                return response.json();
+            })
+            .then(result => {
+                progressFill.style.width = '100%';
+                
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                    
+                    if (result.success) {
+                        messageDiv.innerHTML = `<div class="success-message">
+                            <i class="fas fa-check"></i> ${result.message}
+                        </div>`;
+                        setTimeout(() => loadServerStatus(), 2000);
+                    } else {
+                        messageDiv.innerHTML = `<div class="error-message">
+                            <i class="fas fa-times"></i> خطا: ${result.error}
+                        </div>`;
+                    }
+                }, 1000);
+            })
+            .catch(error => {
+                progressDiv.style.display = 'none';
+                console.error('Error installing Hysteria:', error);
+                messageDiv.innerHTML = '<div class="error-message"><i class="fas fa-times"></i> خطا در نصب</div>';
+            });
+        }
+
+        // Setup server
+        document.getElementById('serverSetupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                port: parseInt(document.getElementById('server_port').value),
+                password: document.getElementById('server_password').value.trim(),
+                domain: document.getElementById('server_domain').value.trim()
+            };
+
+            document.getElementById('serverSetupMessage').innerHTML = '<p style="color: #f39c12;">در حال راه‌اندازی سرور...</p>';
+
+            fetch('/api/server/setup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('serverSetupMessage').innerHTML = 
+                        `<div class="success-message">
+                            <i class="fas fa-check"></i> ${result.message}<br>
+                            <strong>IP سرور:</strong> ${result.server_info.ip}<br>
+                            <strong>پورت:</strong> ${result.server_info.port}<br>
+                            <strong>رمز عبور:</strong> ${result.server_info.password}
+                        </div>`;
+                    
+                    // Refresh server status
+                    setTimeout(() => {
+                        loadServerStatus();
+                    }, 2000);
+                } else {
+                    document.getElementById('serverSetupMessage').innerHTML = 
+                        `<div class="error-message"><i class="fas fa-times"></i> خطا: ${result.error}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error setting up server:', error);
+                document.getElementById('serverSetupMessage').innerHTML = 
+                    '<div class="error-message"><i class="fas fa-times"></i> خطا در راه‌اندازی سرور</div>';
+            });
+        });
+
+        // Load client status
+        function loadStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    displayStatus(data);
+                })
+                .catch(error => {
+                    console.error('Error loading status:', error);
+                    showError('خطا در بارگیری وضعیت');
+                });
+        }
+
+        // Display client status
+        function displayStatus(data) {
+            const container = document.getElementById('clientsStatus');
+            const systemContainer = document.getElementById('systemInfo');
+            const serviceButtons = document.getElementById('serviceButtons');
+            
+            // Display clients
+            container.innerHTML = '';
+            serviceButtons.innerHTML = '';
+            
+            Object.entries(data.clients).forEach(([clientId, client]) => {
+                const statusClass = `status-${client.status}`;
+                const statusIcon = client.status === 'online' ? '✅' : 
+                                 client.status === 'offline' ? '❌' : '⚠️';
+                const statusText = client.status === 'online' ? 'آنلاین' : 
+                                 client.status === 'offline' ? 'آفلاین' : 'نامشخص';
+                
+                // Client status card
+                const canDelete = !['client1', 'client2'].includes(clientId);
+                container.innerHTML += `
+                    <div class="status-item ${statusClass}">
+                        ${canDelete ? `
+                        <div class="client-actions">
+                            <button class="btn-small" onclick="deleteClient('${clientId}')" title="حذف کلاینت">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>` : ''}
+                        <h4>${statusIcon} ${client.name}</h4>
+                        <p>سرور: ${client.server}</p>
+                        <p>پورت SOCKS5: ${client.port}</p>
+                        <p>${statusText}</p>
+                    </div>
+                `;
+
+                // Service restart button
+                serviceButtons.innerHTML += `
+                    <button class="btn-restart" onclick="restartService('${clientId}')">
+                        <i class="fas fa-redo"></i> راه‌اندازی مجدد ${client.name}
+                    </button>
+                `;
+            });
+
+            // Add server and monitor restart buttons
+            serviceButtons.innerHTML += `
+                <button class="btn-restart" onclick="restartService('server')">
+                    <i class="fas fa-redo"></i> راه‌اندازی مجدد سرور
+                </button>
+                <button class="btn-restart" onclick="restartService('monitor')">
+                    <i class="fas fa-redo"></i> راه‌اندازی مجدد مانیتور
+                </button>
+            `;
+
+            // Display system info
+            systemContainer.innerHTML = `
+                <div>
+                    <strong>مدت فعالیت:</strong>
+                    <span>${data.system.uptime}</span>
+                </div>
+                <div>
+                    <strong>آخرین بروزرسانی:</strong>
+                    <span>${new Date(data.timestamp).toLocaleString('fa-IR')}</span>
+                </div>
+            `;
+        }
+
+        // Load clients list for management
+        function loadClientsList() {
+            fetch('/api/clients')
+                .then(response => response.json())
+                .then(clients => {
+                    const container = document.getElementById('clientsList');
+                    container.innerHTML = '';
+
+                    Object.entries(clients).forEach(([clientId, client]) => {
+                        const canDelete = !['client1', 'client2'].includes(clientId);
+                        const statusColor = client.status === 'online' ? '#27ae60' : 
+                                          client.status === 'offline' ? '#e74c3c' : '#f39c12';
+
+                        container.innerHTML += `
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h4 style="color: ${statusColor};">${client.name}</h4>
+                                        <p><strong>سرور:</strong> ${client.server}</p>
+                                        <p><strong>پورت SOCKS5:</strong> ${client.port}</p>
+                                        <p><strong>سرویس:</strong> ${client.service}</p>
+                                    </div>
+                                    <div>
+                                        ${canDelete ? `
+                                        <button class="btn-danger btn-small" onclick="deleteClient('${clientId}')">
+                                            <i class="fas fa-trash"></i> حذف
+                                        </button>` : `
+                                        <span style="color: #666; font-size: 0.9rem;">کلاینت پیش‌فرض</span>`}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    if (Object.keys(clients).length === 0) {
+                        container.innerHTML = '<p style="text-align: center; color: #666;">هیچ کلاینتی یافت نشد</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading clients:', error);
+                    document.getElementById('clientsList').innerHTML = '<p style="color: red;">خطا در بارگیری کلاینت‌ها</p>';
+                });
+        }
+
+        // Add new client
+        document.getElementById('addClientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                server_ip: document.getElementById('client_server_ip').value.trim(),
+                server_port: parseInt(document.getElementById('client_server_port').value),
+                password: document.getElementById('client_password').value.trim(),
+                custom_port: document.getElementById('client_custom_port').value ? parseInt(document.getElementById('client_custom_port').value) : null
+            };
+
+            document.getElementById('addClientMessage').innerHTML = '<p style="color: #f39c12;">در حال ایجاد کلاینت...</p>';
+
+            fetch('/api/clients', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('addClientMessage').innerHTML = 
+                        `<div class="success-message">
+                            <i class="fas fa-check"></i> ${result.message}<br>
+                            <strong>پورت SOCKS5:</strong> ${result.socks_port}
+                        </div>`;
+                    
+                    // Reset form
+                    document.getElementById('addClientForm').reset();
+                    document.getElementById('client_server_port').value = '443';
+                    
+                    // Refresh status
+                    setTimeout(() => {
+                        loadStatus();
+                        loadClientsList();
+                    }, 2000);
+                } else {
+                    document.getElementById('addClientMessage').innerHTML = 
+                        `<div class="error-message"><i class="fas fa-times"></i> خطا: ${result.error}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error adding client:', error);
+                document.getElementById('addClientMessage').innerHTML = 
+                    '<div class="error-message"><i class="fas fa-times"></i> خطا در ایجاد کلاینت</div>';
+            });
+        });
+
+        // Delete client
+        function deleteClient(clientId) {
+            clientToDelete = clientId;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function confirmDelete() {
+            if (clientToDelete) {
+                fetch(`/api/clients/${clientToDelete}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        loadStatus();
+                        loadClientsList();
+                        showMessage(result.message, 'success');
+                    } else {
+                        showMessage('خطا: ' + result.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting client:', error);
+                    showMessage('خطا در حذف کلاینت', 'error');
+                });
+            }
+            closeDeleteModal();
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            clientToDelete = null;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                closeDeleteModal();
+            }
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageClass = type === 'success' ? 'success-message' : 'error-message';
+            const icon = type === 'success' ? 'fas fa-check' : 'fas fa-times';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = messageClass;
+            messageDiv.innerHTML = `<i class="${icon}"></i> ${message}`;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.zIndex = '9999';
+            messageDiv.style.minWidth = '300px';
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Load logs
+        function loadLogs() {
+            const lines = document.getElementById('logLines').value;
+            const filter = document.getElementById('logFilter').value;
+            
+            fetch(`/api/logs?lines=${lines}&filter=${encodeURIComponent(filter)}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayLogs(data);
+                    updateStats(data.total_lines, data.filtered_lines);
+                })
+                .catch(error => {
+                    console.error('Error loading logs:', error);
+                    showError('خطا در بارگیری لاگ‌ها');
+                });
+        }
+
+        // Display logs
+        function displayLogs(data) {
+            const container = document.getElementById('logsContainer');
+            
+            if (data.error) {
+                container.innerHTML = `<div class="error-message">${data.error}</div>`;
+                return;
+            }
+            
+            container.innerHTML = '';
+            data.logs.forEach(log => {
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry log-${log.type}`;
+                logEntry.innerHTML = `
+                    <span class="log-timestamp">${log.timestamp}</span>
+                    ${log.message}
+                `;
+                container.appendChild(logEntry);
+            });
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Update statistics
+        function updateStats(total, filtered) {
+            document.getElementById('totalLogs').textContent = total;
+            document.getElementById('filteredLogs').textContent = filtered;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('fa-IR');
+        }
+
+        // Connect to Server-Sent Events for real-time logs
+        function connectEventSource() {
+            if (eventSource) {
+                eventSource.close();
+            }
+            
+            eventSource = new EventSource('/api/logs/stream');
+            
+            eventSource.onmessage = function(event) {
+                const log = JSON.parse(event.data);
+                
+                if (log.error) {
+                    console.error('Stream error:', log.error);
+                    return;
+                }
+                
+                // Add new log entry
+                const container = document.getElementById('logsContainer');
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry log-${log.type}`;
+                logEntry.innerHTML = `
+                    <span class="log-timestamp">${log.timestamp}</span>
+                    ${log.message}
+                `;
+                container.appendChild(logEntry);
+                
+                // Scroll to bottom
+                container.scrollTop = container.scrollHeight;
+                
+                // Update last update time
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('fa-IR');
+            };
+            
+            eventSource.onerror = function() {
+                console.error('EventSource connection error');
+                setTimeout(connectEventSource, 5000); // Reconnect after 5 seconds
+            };
+        }
+
+        // Start auto refresh
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                if (autoRefresh) {
+                    loadStatus();
+                    if (document.getElementById('server').classList.contains('active')) {
+                        loadServerStatus();
+                    }
+                }
+            }, 10000); // Refresh every 10 seconds
+        }
+
+        // Toggle auto refresh
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            const btn = document.getElementById('autoRefreshBtn');
+            
+            if (autoRefresh) {
+                btn.innerHTML = '<i class="fas fa-pause"></i> توقف خودکار';
+            } else {
+                btn.innerHTML = '<i class="fas fa-play"></i> شروع خودکار';
+            }
+        }
+
+        // Clear logs display
+        function clearLogs() {
+            document.getElementById('logsContainer').innerHTML = '';
+            updateStats(0, 0);
+        }
+
+        // Restart service
+        function restartService(client) {
+            if (!confirm('آیا از راه‌اندازی مجدد این سرویس اطمینان دارید؟')) {
+                return;
+            }
+            
+            fetch(`/api/restart/${client}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.success, 'success');
+                        setTimeout(() => {
+                            loadStatus();
+                            if (client === 'server') {
+                                loadServerStatus();
+                            }
+                        }, 2000);
+                    } else {
+                        showMessage('خطا: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error restarting service:', error);
+                    showMessage('خطا در راه‌اندازی مجدد سرویس', 'error');
+                });
+        }
+
+        // Show error message
+        function showError(message) {
+            const container = document.getElementById('logsContainer');
+            container.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        // Event listeners
+        document.getElementById('logLines').addEventListener('change', loadLogs);
+        document.getElementById('logFilter').addEventListener('input', debounce(loadLogs, 500));
+
+        // Close modal with X button
+        document.querySelector('.close').onclick = function() {
+            closeDeleteModal();
+        }
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+</html>
