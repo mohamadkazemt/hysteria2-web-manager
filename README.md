@@ -51,17 +51,17 @@ Hysteria2 Web Manager یک پنل مدیریت کامل و قدرتمند برا
 
 ```bash
 # دانلود و اجرای اسکریپت نصب
-curl -fsSL https://raw.githubusercontent.com/USERNAME/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
 
 # یا
-wget -O - https://raw.githubusercontent.com/USERNAME/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
 ```
 
 #### روش ۲: نصب دستی
 
 ```bash
 # کلون کردن پروژه
-git clone https://github.com/USERNAME/hysteria2-web-manager.git
+git clone https://github.com/mohamadkazemt/hysteria2-web-manager.git
 cd hysteria2-web-manager
 
 # اجرای اسکریپت نصب
@@ -76,7 +76,7 @@ sudo apt update
 sudo apt install -y python3 python3-pip python3-venv curl wget ufw
 
 # کلون پروژه
-git clone https://github.com/USERNAME/hysteria2-web-manager.git
+git clone https://github.com/mohamadkazemt/hysteria2-web-manager.git
 cd hysteria2-web-manager
 
 # محیط مجازی Python
@@ -281,17 +281,17 @@ Hysteria2 Web Manager is a comprehensive and powerful management panel for Hyste
 
 ```bash
 # Download and run install script
-curl -fsSL https://raw.githubusercontent.com/USERNAME/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
 
 # or
-wget -O - https://raw.githubusercontent.com/USERNAME/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
 ```
 
 #### Method 2: Manual Installation
 
 ```bash
 # Clone the project
-git clone https://github.com/USERNAME/hysteria2-web-manager.git
+git clone https://github.com/mohamadkazemt/hysteria2-web-manager.git
 cd hysteria2-web-manager
 
 # Run install script

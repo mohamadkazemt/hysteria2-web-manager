@@ -41,7 +41,7 @@ We use GitHub issues to track public bugs. Report a bug by opening a new issue.
 
 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/hysteria2-web-manager.git
+git clone https://github.com/mohamadkazemt/hysteria2-web-manager.git
 cd hysteria2-web-manager
 ```
 
