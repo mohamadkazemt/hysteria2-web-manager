@@ -51,10 +51,10 @@ Hysteria2 Web Manager یک پنل مدیریت کامل و قدرتمند برا
 
 ```bash
 # دانلود و اجرای اسکریپت نصب
-curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/master/scripts/install.sh | sudo bash
 
 # یا
-wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/master/scripts/install.sh | sudo bash
 ```
 
 #### روش ۲: نصب دستی
@@ -281,10 +281,10 @@ Hysteria2 Web Manager is a comprehensive and powerful management panel for Hyste
 
 ```bash
 # Download and run install script
-curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/master/scripts/install.sh | sudo bash
 
 # or
-wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main/scripts/install.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/master/scripts/install.sh | sudo bash
 ```
 
 #### Method 2: Manual Installation
