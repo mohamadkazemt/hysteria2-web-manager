@@ -84,7 +84,7 @@ class HysteriaServerManager:
             # Download and install Hysteria2
             result = subprocess.run([
                 '/usr/bin/bash', '-c',
-                'curl -fsSL https://get.hy2.sh/ | bash'
+                '/usr/bin/curl -fsSL https://get.hy2.sh/ | /usr/bin/bash'
             ], capture_output=True, text=True, timeout=300)
             
             if result.returncode == 0:
