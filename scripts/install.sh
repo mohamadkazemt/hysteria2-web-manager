@@ -12,6 +12,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# GitHub repository info
+REPO_URL="https://github.com/mohamadkazemt/hysteria2-web-manager"
+RAW_URL="https://raw.githubusercontent.com/mohamadkazemt/hysteria2-web-manager/main"
+
 # Print colored output
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -59,7 +63,7 @@ create_directories() {
     cd /opt/hysteria-web
     
     # Create subdirectories
-    mkdir -p src static docs scripts logs
+    mkdir -p src static docs scripts logs src/templates
     
     print_success "Directories created"
 }
@@ -82,24 +86,27 @@ setup_python_env() {
     print_success "Python environment set up"
 }
 
-# Copy application files
-copy_files() {
-    print_status "Copying application files..."
+# Download application files from GitHub
+download_files() {
+    print_status "Downloading application files from GitHub..."
     
-    # Copy source files if they exist
-    if [ -f "app.py" ]; then
-        cp app.py /opt/hysteria-web/src/
-    fi
+    cd /opt/hysteria-web
     
-    if [ -d "templates" ]; then
-        cp -r templates /opt/hysteria-web/src/
-    fi
+    # Download main application file
+    curl -fsSL "${RAW_URL}/src/app.py" -o src/app.py
+    chmod +x src/app.py
     
-    if [ -f "requirements.txt" ]; then
-        cp requirements.txt /opt/hysteria-web/
-    fi
+    # Download template file
+    curl -fsSL "${RAW_URL}/src/templates/index.html" -o src/templates/index.html
     
-    print_success "Application files copied"
+    # Download requirements
+    curl -fsSL "${RAW_URL}/requirements.txt" -o requirements.txt
+    
+    # Install Python dependencies from downloaded requirements
+    source venv/bin/activate
+    pip install -r requirements.txt
+    
+    print_success "Application files downloaded"
 }
 
 # Create systemd service
@@ -144,16 +151,21 @@ EOL
 configure_firewall() {
     print_status "Configuring firewall..."
     
-    # Enable UFW if not already enabled
-    ufw --force enable
-    
-    # Allow SSH
-    ufw allow ssh
-    
-    # Allow web interface port
-    ufw allow 8080/tcp
-    
-    print_success "Firewall configured"
+    # Check if UFW is installed and enable it
+    if command -v ufw > /dev/null; then
+        # Enable UFW if not already enabled
+        ufw --force enable
+        
+        # Allow SSH
+        ufw allow ssh
+        
+        # Allow web interface port
+        ufw allow 8080/tcp
+        
+        print_success "Firewall configured"
+    else
+        print_warning "UFW not found, skipping firewall configuration"
+    fi
 }
 
 # Create management scripts
@@ -203,15 +215,40 @@ EOL
     print_success "Management scripts created"
 }
 
+# Create initial configuration files
+create_config_files() {
+    print_status "Creating initial configuration files..."
+    
+    cd /opt/hysteria-web
+    
+    # Create empty clients.json if it doesn't exist
+    if [ ! -f clients.json ]; then
+        echo '{}' > clients.json
+    fi
+    
+    # Create empty server.json if it doesn't exist  
+    if [ ! -f server.json ]; then
+        echo '{}' > server.json
+    fi
+    
+    # Set proper permissions
+    chmod 644 clients.json server.json
+    
+    print_success "Configuration files created"
+}
+
 # Main installation function
 main() {
     print_status "Starting Hysteria2 Web Manager installation..."
+    echo "Repository: ${REPO_URL}"
+    echo
     
     check_root
     install_dependencies
     create_directories
     setup_python_env
-    copy_files
+    download_files
+    create_config_files
     create_systemd_service
     configure_firewall
     create_management_scripts
@@ -224,6 +261,7 @@ main() {
     echo "  • View logs: hysteria-manager logs"
     echo "  • Access web interface: http://YOUR_SERVER_IP:8080"
     echo
+    print_status "GitHub Repository: ${REPO_URL}"
     print_warning "Don't forget to configure your Hysteria2 clients through the web interface!"
 }
 
