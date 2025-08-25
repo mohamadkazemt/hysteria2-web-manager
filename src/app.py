@@ -85,7 +85,8 @@ class HysteriaServerManager:
             result = subprocess.run([
                 '/usr/bin/bash', '-c',
                 '/usr/bin/curl -fsSL https://get.hy2.sh/ | /usr/bin/bash'
-            ], capture_output=True, text=True, timeout=300)
+            ], capture_output=True, text=True, timeout=300, 
+               env={**os.environ, 'PATH': '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'})
             
             if result.returncode == 0:
                 return {"success": True, "message": "Hysteria2 installed successfully"}
